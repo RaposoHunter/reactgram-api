@@ -57,8 +57,36 @@ async function profile(req: Request & { user: Object }, res: Response) {
     return res.status(HttpResponse.HTTP_OK).json(user);
 }
 
+async function update(req: Request & { user?: Object & { _id: Types.ObjectId }}, res: Response) {
+    const { name, password, bio } = req.body;
+    let profile = null;
+    let user = null;
+    
+    if(req.file) profile = req.file.filename;
+
+    if(req.user) {
+        user = await User.findById(new Types.ObjectId(req.user._id)).select('-password');
+    }
+
+    if(!user) return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['Usuário não encontrado'] });
+
+    if(name) user.name = name;
+    if(password) {
+        const salt = await bcrypt.genSalt();
+        user.password = await bcrypt.hash(password, salt);
+    };
+
+    if(profile) user.profileImage = profile;
+    if(bio) user.bio = bio;
+
+    await user.save();
+
+    return res.status(HttpResponse.HTTP_OK).json(user);
+}
+
 export {
     register,
     login,
-    profile
+    profile,
+    update
 }
