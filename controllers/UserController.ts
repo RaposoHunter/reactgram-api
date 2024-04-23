@@ -99,7 +99,7 @@ async function find(req: Request, res: Response)
         });
     }
 
-    try {        
+    try {
         const user = await User.findById(new Types.ObjectId(req.params.id)).select('-password');
     
         if(!user) return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['Usuário não encontrado'] });

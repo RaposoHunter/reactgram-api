@@ -1,5 +1,6 @@
 import express, { Router } from "express";
 import authRouter from './AuthRoutes.js';
+import userRouter from './UserRoutes.js';
 
 const router = express();
 
@@ -9,7 +10,8 @@ router.get('/', (req, res) => {
     });
 });
 
-router.use('/api/users/', authRouter);
+router.use('/api/', authRouter);
+router.use('/api/users/', userRouter);
 
 export default router;
 
