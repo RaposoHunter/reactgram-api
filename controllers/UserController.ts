@@ -36,7 +36,22 @@ async function register(req: Request, res: Response) {
     });
 }
 
+async function login(req: Request, res: Response) {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if(!user) return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['E-mail e/ou senha inválidos'] });
+    if(!(await bcrypt.compare(password, user.password as string))) return res.status(HttpResponse.HTTP_UNAUTHORIZED).json({ errors: ['E-mail e/ou senha inválidos'] });
+
+    return res.status(HttpResponse.HTTP_OK).json({
+        _id: user._id,
+        profileImage: user.profileImage,
+        token: generateToken(user._id)
+    });
+}
+
 export {
     register,
-    generateToken
+    login,
 }

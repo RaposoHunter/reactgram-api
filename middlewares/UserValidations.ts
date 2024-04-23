@@ -31,6 +31,21 @@ function userCreateValidation()
     ];
 }
 
+function loginValidation()
+{
+    return [
+        body('email')
+            .isString()
+            .withMessage('O email é obrigatório')
+            .isEmail()
+            .withMessage('E-mail inválido'),
+        body('password')
+            .isString()
+            .withMessage('A senha é obrigatória')
+    ]
+}
+
 export {
-    userCreateValidation
+    userCreateValidation,
+    loginValidation
 }
