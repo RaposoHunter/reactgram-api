@@ -84,9 +84,40 @@ async function update(req: Request & { user?: Object & { _id: Types.ObjectId }},
     return res.status(HttpResponse.HTTP_OK).json(user);
 }
 
+async function find(req: Request, res: Response)
+{
+    const { id } = req.params;
+    let objId = null;
+
+    try {
+        objId = new Types.ObjectId(id);
+    } catch (error) {
+        const e = error as Error;
+        
+        return res.status(HttpResponse.HTTP_NOT_FOUND).json({
+            errors: ['Usuário não encontrado']
+        });
+    }
+
+    try {        
+        const user = await User.findById(new Types.ObjectId(req.params.id)).select('-password');
+    
+        if(!user) return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['Usuário não encontrado'] });
+    
+        return res.status(HttpResponse.HTTP_OK).json(user);
+    } catch (error) {
+        const e = error as Error;
+        
+        return res.status(HttpResponse.HTTP_INTERNAL_SERVER_ERROR).json({
+            errors: ['Algo deu errado ao buscar o usuário. Tente novamente mais tarde!']
+        });
+    }
+}
+
 export {
     register,
     login,
     profile,
-    update
+    update,
+    find
 }
