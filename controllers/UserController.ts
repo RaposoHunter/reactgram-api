@@ -51,7 +51,14 @@ async function login(req: Request, res: Response) {
     });
 }
 
+async function profile(req: Request & { user: Object }, res: Response) {
+    const user = req.user;
+
+    return res.status(HttpResponse.HTTP_OK).json(user);
+}
+
 export {
     register,
     login,
+    profile
 }
