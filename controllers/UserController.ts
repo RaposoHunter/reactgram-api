@@ -14,7 +14,8 @@ function generateToken(id: Types.ObjectId)
     });
 }
 
-async function register(req: Request, res: Response) {
+async function register(req: Request, res: Response) 
+{
     const {name, email, password} = req.body;
 
     if(await User.findOne({ email })) return res.status(HttpResponse.HTTP_UNPROCESSABLE_ENTITY).json({ errors: ['E-mail em uso'] });
@@ -36,7 +37,8 @@ async function register(req: Request, res: Response) {
     });
 }
 
-async function login(req: Request, res: Response) {
+async function login(req: Request, res: Response) 
+{
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
@@ -51,13 +53,15 @@ async function login(req: Request, res: Response) {
     });
 }
 
-async function profile(req: Request & { user: Object }, res: Response) {
+async function profile(req: Request & { user: Object }, res: Response) 
+{
     const user = req.user;
 
     return res.status(HttpResponse.HTTP_OK).json(user);
 }
 
-async function update(req: Request & { user?: Object & { _id: Types.ObjectId }}, res: Response) {
+async function update(req: Request & { user?: Object & { _id: Types.ObjectId }}, res: Response) 
+{
     const { name, password, bio } = req.body;
     let profile = null;
     let user = null;
