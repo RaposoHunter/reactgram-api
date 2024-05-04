@@ -42,6 +42,8 @@ function loginValidation()
         body('password')
             .isString()
             .withMessage('A senha é obrigatória')
+            .notEmpty()
+            .withMessage('A senha é obrigatória')
     ]
 }
 
