@@ -8,7 +8,7 @@ import upload from "../middlewares/ImageUpload.js";
 const router = Router();
 
 router.get('/profile', authenticate, profile as any);
-router.put('/', authenticate, userUpdateValidation(), validate, upload.single('profile'), update);
+router.put('/', authenticate, userUpdateValidation(), validate, upload.single('profileImage'), update);
 router.get('/:id', find);
 
 export default router;
