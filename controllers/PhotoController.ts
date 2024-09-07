@@ -12,10 +12,10 @@ async function index(req: AuthenticatedRequest, res: Response)
     return res.status(HttpResponse.HTTP_OK).json(photos);
 }
 
-async function store(req: AuthenticatedRequest, res: Response) 
+async function store(req: AuthenticatedRequest, res: Response)
 {
     const { title } = req.body;
-    const image = req.file?.filename;        
+    const image = req.file?.filename;
 
     const user = await User.findById(new Types.ObjectId(req.user._id));
     if(!user) return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['Usuário não encontrado'] });
@@ -28,7 +28,7 @@ async function store(req: AuthenticatedRequest, res: Response)
     });
 
     if(!photo) return res.status(HttpResponse.HTTP_INTERNAL_SERVER_ERROR).json({ errors: ['Algo deu errado ao inserir a foto. Tente novamente mais tarde!'] });
-    
+
     return res.status(HttpResponse.HTTP_CREATED).json(photo);
 }
 
@@ -42,7 +42,7 @@ async function find(req: AuthenticatedRequest, res: Response)
         objId = new Types.ObjectId(id);
     } catch (error) {
         const e = error as Error;
-        
+
         return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['Foto não encontrada'] });
     }
 
@@ -62,7 +62,7 @@ async function update(req: AuthenticatedRequest, res: Response)
         objId = new Types.ObjectId(id);
     } catch (error) {
         const e = error as Error;
-        
+
         return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['Foto não encontrada'] });
     }
 
@@ -74,7 +74,7 @@ async function update(req: AuthenticatedRequest, res: Response)
     if(!photo.userId!.equals(user._id)) return res.status(HttpResponse.HTTP_FORBIDDEN).json({ errors: ['Você não tem permissão para editar essa foto'] });
 
     if(req.body.title) {
-        photo.title = req.body.title;    
+        photo.title = req.body.title;
     }
 
     await photo.save();
@@ -82,10 +82,10 @@ async function update(req: AuthenticatedRequest, res: Response)
     return res.status(HttpResponse.HTTP_OK).json({
         photo,
         message: 'Foto atualizada com sucesso'
-    });    
+    });
 }
 
-async function destroy(req: AuthenticatedRequest, res: Response) 
+async function destroy(req: AuthenticatedRequest, res: Response)
 {
     const { id } = req.params;
 
@@ -95,7 +95,7 @@ async function destroy(req: AuthenticatedRequest, res: Response)
         objId = new Types.ObjectId(id);
     } catch (error) {
         const e = error as Error;
-        
+
         return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['Foto não encontrada'] });
     }
 
@@ -110,9 +110,9 @@ async function destroy(req: AuthenticatedRequest, res: Response)
 
     await Photo.findByIdAndDelete(photo._id);
 
-    return res.status(HttpResponse.HTTP_OK).json({ 
+    return res.status(HttpResponse.HTTP_OK).json({
         id: photo._id,
-        message: 'Foto deletada com sucesso' 
+        message: 'Foto deletada com sucesso'
     });
 }
 
@@ -126,19 +126,19 @@ async function fromUser(req: AuthenticatedRequest, res: Response)
         objId = new Types.ObjectId(id);
     } catch (error) {
         const e = error as Error;
-        
+
         return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['Usuário não encontrado'] });
     }
 
     const user = await User.findById(new Types.ObjectId(id));
-    if(!user) return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['Usuário não encontrado'] });    
+    if(!user) return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['Usuário não encontrado'] });
 
     const photos = await Photo.find({ userId: user._id }).sort([['createdAt', -1]]).exec();
 
     return res.status(HttpResponse.HTTP_OK).json(photos);
 }
 
-async function like(req : AuthenticatedRequest, res: Response)
+async function like(req: AuthenticatedRequest, res: Response)
 {
     const { id } = req.params;
 
@@ -148,7 +148,7 @@ async function like(req : AuthenticatedRequest, res: Response)
         objId = new Types.ObjectId(id);
     } catch (error) {
         const e = error as Error;
-        
+
         return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['Foto não encontrada'] });
     }
 
@@ -165,7 +165,7 @@ async function like(req : AuthenticatedRequest, res: Response)
 
     return res.status(HttpResponse.HTTP_OK).json({
         photoId: photo._id,
-        userId: user._id,        
+        userId: user._id,
         message: 'Foto curtida com sucesso'
     });
 }
@@ -180,7 +180,7 @@ async function storeComment(req: AuthenticatedRequest, res: Response)
         objId = new Types.ObjectId(id);
     } catch (error) {
         const e = error as Error;
-        
+
         return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['Foto não encontrada'] });
     }
 

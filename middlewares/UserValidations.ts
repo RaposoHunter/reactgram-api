@@ -54,7 +54,7 @@ function userUpdateValidation()
             .optional()
             .isLength({ min: 3 })
             .withMessage('O nome deve ter no mínimo 3 caracteres'),
-    
+
         body('password')
             .optional()
             .isLength({ min: 5 })

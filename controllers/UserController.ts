@@ -6,7 +6,7 @@ import { Response as HttpResponse } from "../lib/Response.js";
 import { Types } from "mongoose";
 
 function generateToken(id: Types.ObjectId)
-{    
+{
     const JWT_SECRET = process.env.APP_KEY;
 
     return jwt.sign({ id }, JWT_SECRET!, {
@@ -14,7 +14,7 @@ function generateToken(id: Types.ObjectId)
     });
 }
 
-async function register(req: Request, res: Response) 
+async function register(req: Request, res: Response)
 {
     const {name, email, password} = req.body;
 
@@ -37,7 +37,7 @@ async function register(req: Request, res: Response)
     });
 }
 
-async function login(req: Request, res: Response) 
+async function login(req: Request, res: Response)
 {
     const { email, password } = req.body;
 
@@ -53,19 +53,19 @@ async function login(req: Request, res: Response)
     });
 }
 
-async function profile(req: Request & { user: Object }, res: Response) 
+async function profile(req: Request & { user: Object }, res: Response)
 {
     const user = req.user;
 
     return res.status(HttpResponse.HTTP_OK).json(user);
 }
 
-async function update(req: Request & { user?: Object & { _id: Types.ObjectId }}, res: Response) 
+async function update(req: Request & { user?: Object & { _id: Types.ObjectId }}, res: Response)
 {
     const { name, password, bio } = req.body;
     let profile = null;
     let user = null;
-    
+
     if(req.file) profile = req.file.filename;
 
     if(req.user) {
@@ -97,7 +97,7 @@ async function find(req: Request, res: Response)
         objId = new Types.ObjectId(id);
     } catch (error) {
         const e = error as Error;
-        
+
         return res.status(HttpResponse.HTTP_NOT_FOUND).json({
             errors: ['Usuário não encontrado']
         });
@@ -105,13 +105,13 @@ async function find(req: Request, res: Response)
 
     try {
         const user = await User.findById(new Types.ObjectId(req.params.id)).select('-password');
-    
+
         if(!user) return res.status(HttpResponse.HTTP_NOT_FOUND).json({ errors: ['Usuário não encontrado'] });
-    
+
         return res.status(HttpResponse.HTTP_OK).json(user);
     } catch (error) {
         const e = error as Error;
-        
+
         return res.status(HttpResponse.HTTP_INTERNAL_SERVER_ERROR).json({
             errors: ['Algo deu errado ao buscar o usuário. Tente novamente mais tarde!']
         });
